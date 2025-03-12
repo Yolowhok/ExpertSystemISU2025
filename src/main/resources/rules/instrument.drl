@@ -1,0 +1,340 @@
+package rules
+
+import rules.Instrument
+import rules.Answer
+
+
+//**************************
+rule "NotStringInstrument"
+when 
+    $a : Instrument(getIsWindDriven() == false)
+then 
+    System.out.println("Это не струнный инструмент");
+    $a.setIsStart(false);
+
+end
+
+rule "Arpha"
+when 
+    $a : Instrument(getIsWindDriven() == true)
+then 
+    System.out.println("Это Эолова Арфа");
+    $a.setIsStart(false);
+
+end
+
+rule "Violonchel"
+when 
+    $a : Instrument(getIsPlayedSitting() == true)
+then 
+    System.out.println("Это виолончель");
+    $a.setIsStart(false);
+
+end
+
+rule "kontrabass"
+when 
+    $a : Instrument(getIsPlayedStanding() == true)
+then 
+    System.out.println("Это контрабасс");
+    $a.setIsStart(false);
+end
+
+rule "alt"
+when 
+    $a : Instrument(getHasHighestSound() == false)
+then 
+    System.out.println("Это альт");
+    $a.setIsStart(false);
+end
+
+rule "skripka"
+when 
+    $a : Instrument(getHasHighestSound() == true)
+then 
+    System.out.println("Это скрипка");
+    $a.setIsStart(false);
+end
+
+rule "piano"
+when 
+    $a : Instrument(getAreStringsVertical() == true)
+then 
+    System.out.println("Это пианино");
+    $a.setIsStart(false);
+end
+
+rule "klavichord"
+when 
+    $a : Instrument(getIsHammered() == false)
+then 
+    System.out.println("Это клавикорд");
+    $a.setIsStart(false);
+end
+
+rule "royal"
+when 
+    $a : Instrument(getIsHammered() == true)
+then 
+    System.out.println("Это рояль");
+    $a.setIsStart(false);
+end
+
+rule "bass"
+when 
+    $a : Instrument(getHasThickStrings() == true)
+then 
+    System.out.println("Это басс-гитара");
+    $a.setIsStart(false);
+end
+
+rule "elictricClassikGuitar"
+when 
+    $a : Instrument(getHasNylonStrings() == true && getHasResonator() == false)
+then 
+    System.out.println("Это электро-классическая гитара");
+    $a.setIsStart(false);
+end
+
+rule "electricGuitar"
+when 
+    $a : Instrument(getHasNylonStrings() == false && getHasResonator() == false)
+then 
+    System.out.println("Это электрогитара");
+    $a.setIsStart(false);
+end
+
+rule "AcousticGuitar(estrada)"
+when 
+    $a : Instrument(getHasNylonStrings() == false && getHasPickups() == false)
+then 
+    System.out.println("Это акустическая гитара (эстрадная)");
+    $a.setIsStart(false);
+end
+
+rule "ClassicGuitar"
+when 
+    $a : Instrument(getHasFourStrings() == false)
+then 
+    System.out.println("Это классическая гитара");
+    $a.setIsStart(false);
+end
+
+rule "ukulele"
+when 
+    $a : Instrument(getHasFourStrings() == true)
+then 
+    System.out.println("Это укулеле");
+    $a.setIsStart(false);
+end
+
+rule "electicAcousticGuitar"
+when 
+    $a : Instrument(getIsStandalone() == false)
+then 
+    System.out.println("Это электро-акустическая гитара");
+    $a.setIsStart(false);
+end
+
+rule "poluAcousticElictricGuitar"
+when 
+    $a : Instrument(getIsStandalone() == true)
+then 
+    System.out.println("Это полу-акустическая гитара");
+    $a.setIsStart(false);
+end
+//**************************
+
+
+rule "getStart"
+when
+    $a : Instrument(getIsPlucked() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это инструмент щипкового типа?")) {
+        $a.setIsPlucked(true);
+    } else {
+        $a.setIsPlucked(false);
+    }
+end
+
+rule "isPercussion"
+when 
+    $a : Instrument(getIsPlucked() == false, getIsPercussion() == null)
+then    
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это инструмент ударного типа?")) {
+        $a.setIsPercussion(true);
+    } else {
+        $a.setIsPercussion(false);
+    }
+end
+
+rule "isBow"
+when 
+    $a : Instrument(getIsPercussion() == false, getIsBow() == null)
+then    
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это инструмент смычкового типа?")) {
+        $a.setIsBow(true);
+    } else {
+        $a.setIsBow(false);
+    }
+end
+
+rule "isWindDriven"
+when 
+    $a : Instrument(getIsBow() == false, getIsWindDriven() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Струны этого инструмента колеблятся благодаря ветру?")) {
+        $a.setIsWindDriven(true);
+    } else {
+        $a.setIsWindDriven(false);
+    }
+end
+
+rule "isPlayedSitting"
+when 
+    $a : Instrument(getIsBow() == true, getIsPlayedSitting() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("На нём играют только сидя?")) {
+        $a.setIsPlayedSitting(true);
+    } else {
+        $a.setIsPlayedSitting(false);
+    }
+    System.out.println($a.toString());
+end
+
+rule "isPlayedStanding"
+when 
+    $a : Instrument(getIsPlayedSitting() == false, getIsPlayedStanding() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("На нём играют только стоя?")) {
+        $a.setIsPlayedStanding(true);
+    } else {
+        $a.setIsPlayedStanding(false);
+    }
+end
+
+rule "hasHighestSound"
+when 
+    $a : Instrument(getIsPlayedStanding() == false, getHasHighestSound() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Этот инструмент имеет самое высокое звучание?")) {
+        $a.setHasHighestSound(true);
+    } else {
+        $a.setHasHighestSound(false);
+    }
+end
+
+rule "areStringsVertical"
+when 
+    $a : Instrument(getIsPercussion() == true, getIsPercussion() == null)
+then    
+    Answer answer = new Answer();
+    if (answer.getAnswer("На этом инструменте струны расположены вертикально?")) {
+        $a.setAreStringsVertical(true);
+    } else {
+        $a.setAreStringsVertical(false);
+    }
+end
+
+rule "isHammered"
+when 
+    $a : Instrument(getIsPercussion() == true, getIsPercussion() == null)
+then    
+    Answer answer = new Answer();
+    if (answer.getAnswer("Звук извлекается посредством ударов молоточк благодаря клавиш?")) {
+        $a.setIsHammered(true);
+    } else {
+        $a.setIsHammered(false);
+    }
+end
+
+rule "hasResonator"
+when
+    $a : Instrument(getIsPlucked() == true, getHasResonator() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это инструмент имеет резонаторное отверстие?")) {
+        $a.setHasResonator(true);
+    } else {
+        $a.setHasResonator(false);
+    }
+end
+
+rule "hasThickStrings"
+when
+    $a : Instrument(getHasResonator() == false, getHasThickStrings() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это имеет очень толстый калибр струн?")) {
+        $a.setHasThickStrings(true);
+    } else {
+        $a.setHasThickStrings(false);
+    }
+end
+
+rule "hasNylonStrings"
+when
+    $a : Instrument((getHasThickStrings() == false && getHasNylonStrings() == null) || getHasPickups() == false && getHasNylonStrings() == null) 
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Этот инструмент имеет нейлоновые струны?")) {
+        $a.setHasNylonStrings(true);
+    } else {
+        $a.setHasNylonStrings(false);
+    }
+end
+
+
+rule "hasPickups"
+when
+    $a : Instrument(getHasResonator() == true, getHasPickups() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Это инструмент имеет звукосниматели?")) {
+        $a.setHasPickups(true);
+    } else {
+        $a.setHasPickups(false);
+    }
+end
+
+
+rule "hasFourStrings"
+when
+    $a : Instrument(getHasNylonStrings() == true && getHasPickups() == false && getHasFourStrings() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Этот инструмент имеет 4 струны?")) {
+        $a.setHasFourStrings(true);
+    } else {
+        $a.setHasFourStrings(false);
+    }
+end
+
+rule "isStandalone"
+when
+    $a : Instrument(getHasPickups() == true, getIsStandalone() == null)
+then
+    Answer answer = new Answer();
+    if (answer.getAnswer("Этот инструмент самостоятелен без предусилителя?")) {
+        $a.setIsStandalone(true);
+    } else {
+        $a.setIsStandalone(false);
+    }
+end
+
+
+
+
+
+
+
+
+
+

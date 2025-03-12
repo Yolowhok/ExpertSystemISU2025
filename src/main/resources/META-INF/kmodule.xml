@@ -1,0 +1,11 @@
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+    <kbase name="rule" packages="rules">
+        <ksession name="ksession-rules"/>
+    </kbase>
+    <kbase name="age" packages="rules">
+        <ksession name="age"/>
+    </kbase>
+    <kbase name="instrument" packages="rules">
+        <ksession name="instrument"/>
+    </kbase>
+</kmodule>

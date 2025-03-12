@@ -1,0 +1,10 @@
+package rules
+
+import rules.Applicant
+
+rule "Is of valid age"
+when
+    $a : Applicant(age < 18)
+then
+    System.out.println($a.getAge() + " is under 18 years old.");
+end
